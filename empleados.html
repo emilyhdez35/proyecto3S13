@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empleados</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/facturas.css">
+</head>
+
+
+<header id="header">
+    <img src="img/LogoSample_ByTailorBrands.jpg" alt="logo" id="logo">
+
+    <nav class="menu">
+        <a href="inicio.html">Inicio</a>
+        <a href="flujoDeCaja.html">Flujo de Caja</a>
+        <a href="login.html">Iniciar Sesión</a>
+        <a href="generarCodigos.php">Generar códigos</a>
+        <a href="facturaXcobrar.php">Facturas por Cobrar</a>
+        <a href="facturaXpagar.php">Facturas por Pagar</a>
+        <a href="empleados.html">Empleados</a>
+        <a href="planilla.html">Planilla</a>
+
+    </nav>
+
+    <div class="ubicacion">
+        <i class="fa-solid fa-location-dot"></i>
+        <p>Costa Rica</p>
+
+    </div>
+
+</header>
+
+<body>
+
+    <h1>Registro de Empleados</h1>
+
+    <form id="formEmpleado">
+
+        <label>Nombre</label>
+        <input type="text" name="nombre" required>
+
+        <label>Cédula</label>
+        <input type="text" name="cedula">
+
+        <label>Teléfono</label>
+        <input type="text" name="telefono">
+
+        <label>Correo</label>
+        <input type="email" name="correo">
+
+        <label>Puesto</label>
+        <input type="text" name="puesto">
+
+        <button type="submit">Guardar empleado</button>
+
+    </form>
+
+    <h2>Lista de empleados</h2>
+
+    <table id="tablaEmpleados">
+        <tr>
+            <th>Nombre</th>
+            <th>Cédula</th>
+            <th>Teléfono</th>
+            <th>Correo</th>
+            <th>Puesto</th>
+        </tr>
+    </table>
+
+    <script>
+        document.getElementById("formEmpleado").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            let form = new FormData(this);
+
+            fetch("empleadoService.php?accion=guardar", {
+                method: "POST",
+                body: form
+            })
+                .then(r => r.text())
+                .then(alert)
+                .then(cargar);
+        });
+
+        function cargar() {
+            fetch("empleadoService.php?accion=listar")
+                .then(r => r.json())
+                .then(data => {
+                    let tabla = document.getElementById("tablaEmpleados");
+
+                    tabla.innerHTML = `
+        <tr>
+            <th>Nombre</th>
+            <th>Cédula</th>
+            <th>Teléfono</th>
+            <th>Correo</th>
+            <th>Puesto</th>
+        </tr>`;
+
+                    data.forEach(e => {
+                        tabla.innerHTML += `
+            <tr>
+                <td>${e.nombre}</td>
+                <td>${e.cedula}</td>
+                <td>${e.telefono}</td>
+                <td>${e.correo}</td>
+                <td>${e.puesto}</td>
+            </tr>`;
+                    });
+                });
+        }
+
+        cargar();
+    </script>
+
+</body>
+
+</html>

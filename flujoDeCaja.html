@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flujo de caja</title>
+    <link rel="stylesheet" href="css/caja.css">
+    <link rel="stylesheet" href="css/estilos.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<header id="header">
+    <img src="img/LogoSample_ByTailorBrands.jpg" alt="logo" id="logo">
+
+     <nav class="menu">
+        <a href="inicio.html">Inicio</a>
+        <a href="flujoDeCaja.html">Flujo de Caja</a>
+        <a href="login.html">Iniciar Sesión</a>
+        <a href="generarCodigos.php">Generar códigos</a>
+        <a href="facturaXcobrar.php">Facturas por Cobrar</a>
+        <a href="facturaXpagar.php">Facturas por Pagar</a>
+         <a href="empleados.html">Empleados</a>
+        <a href="planilla.html">Planilla</a>
+        
+    </nav>
+
+    <div class="ubicacion">
+        <i class="fa-solid fa-location-dot"></i>
+        <p>Costa Rica</p>
+
+    </div>
+
+</header>
+
+<body>
+    <p>Ingresos:</p>
+    <input type="number" id="ventas" placeholder="Ventas">
+    <p>Egresos:</p>
+    <input type="number" id="egreso1" placeholder="Compras"><br>
+    <input type="number" id="egreso2" placeholder="Sueldos"><br>
+    <input type="number" id="egreso3" placeholder="Cargas Sociales"><br>
+    <input type="number" id="egreso4" placeholder="Internet"><br>
+    <input type="number" id="egreso5" placeholder="Agua"><br>
+    <input type="number" id="egreso6" placeholder="Electricidad"><br>
+    <input type="number" id="egreso7" placeholder="Teléfono"><br>
+    <input type="number" id="egreso8" placeholder="Papelería"><br>
+    <input type="number" id="egreso9" placeholder="Limpieza"><br>
+    <input type="number" id="egreso10" placeholder="Fumigación"><br>
+    <button onclick="calcular()">Calcular</button>
+    <p id="resultado"></p>
+
+
+    <script>
+        function calcular() {
+            let i1 = parseFloat(document.getElementById("ventas").value);
+            let e1 = parseFloat(document.getElementById("egreso1").value);
+            let e2 = parseFloat(document.getElementById("egreso2").value);
+            let e3 = parseFloat(document.getElementById("egreso3").value);
+            let e4 = parseFloat(document.getElementById("egreso4").value);
+            let e5 = parseFloat(document.getElementById("egreso5").value);
+            let e6 = parseFloat(document.getElementById("egreso6").value);
+            let e7 = parseFloat(document.getElementById("egreso7").value);
+            let e8 = parseFloat(document.getElementById("egreso8").value);
+            let e9 = parseFloat(document.getElementById("egreso9").value);
+            let e10 = parseFloat(document.getElementById("egreso10").value);
+
+            let egresos = [e1, e2, e3, e4, e5, e6, e7, e8, e9, e10];
+            let totalEgresos = 0;
+            for (let i = 0; i < egresos.length; i++) {
+                totalEgresos += egresos[i];
+            }
+
+            let resultado = `
+            Resultado de ingresos: ${i1}<br>
+            Resultado de egresos: ${totalEgresos}<br>
+            Ganancia: ${i1 - totalEgresos}
+           `;
+            document.getElementById("resultado").innerHTML = resultado;
+        }
+    </script>
+</body>
+
+</html>

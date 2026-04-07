@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuarios</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/facturas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+
+<header id="header">
+    <img src="img/LogoSample_ByTailorBrands.jpg" alt="logo" id="logo">
+
+    <nav class="menu">
+        <a href="inicio.html">Inicio</a>
+        <a href="flujoDeCaja.html">Flujo de Caja</a>
+        <a href="login.html">Iniciar Sesión</a>
+        <a href="generarCodigos.php">Generar códigos</a>
+        <a href="facturaXcobrar.php">Facturas por Cobrar</a>
+        <a href="facturaXpagar.php">Facturas por pagar</a>
+        <a href="empleados.html">Empleados</a>
+        <a href="planilla.html">Planilla</a>
+
+    </nav>
+
+    <div class="ubicacion">
+        <i class="fa-solid fa-location-dot"></i>
+        <p>Costa Rica</p>
+
+    </div>
+
+</header>
+
+<body>
+
+    <h1>Creación de Usuarios</h1>
+
+    <!-- FORM -->
+    <form id="formUsuario">
+
+        <label>Correo</label>
+        <input type="email" name="correo" required>
+
+        <label>Contraseña</label>
+        <input type="password" name="contrasena" required>
+
+        <label>Tipo de usuario</label>
+        <select name="tipoUsuario">
+            <option value="gestion">Gestión</option>
+            <option value="administrador">Administrador</option>
+        </select>
+
+        <button type="submit">Registrar Usuario</button>
+
+    </form>
+
+    <h2>Lista de usuarios</h2>
+
+    <table id="tablaUsuarios">
+        <tr>
+            <th>Correo</th>
+            <th>Tipo</th>
+        </tr>
+    </table>
+
+    <script>
+        // REGISTRAR
+        document.getElementById("formUsuario").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            let form = new FormData(this);
+            form.append("accion", "registro");
+
+            fetch("usuarioService.php", {
+                method: "POST",
+                body: form
+            })
+                .then(r => r.text())
+                .then(alert)
+                .then(cargar);
+        });
+
+        // LISTAR
+        function cargar() {
+            fetch("usuarioService.php?accion=listar")
+                .then(r => r.json())
+                .then(data => {
+                    let tabla = document.getElementById("tablaUsuarios");
+
+                    tabla.innerHTML = `
+        <tr>
+            <th>Correo</th>
+            <th>Tipo</th>
+        </tr>`;
+
+                    data.forEach(u => {
+                        tabla.innerHTML += `
+            <tr>
+                <td>${u.correo}</td>
+                <td>${u.tipoUsuario}</td>
+            </tr>`;
+                    });
+                });
+        }
+
+        cargar();
+    </script>
+
+</body>
+<script>
+    // REGISTRAR
+    document.getElementById("formUsuario").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        let form = new FormData(this);
+        form.append("accion", "registro");
+
+        fetch("usuarioService.php", {
+            method: "POST",
+            body: form
+        })
+            .then(r => r.text())
+            .then(alert)
+            .then(cargar);
+    });
+
+    // ELIMINAR
+    function eliminar(correo) {
+        if (!confirm("¿Eliminar usuario?")) return;
+
+        let form = new FormData();
+        form.append("accion", "eliminar");
+        form.append("correo", correo);
+
+        fetch("usuarioService.php", {
+            method: "POST",
+            body: form
+        })
+            .then(r => r.text())
+            .then(alert)
+            .then(cargar);
+    }
+
+    // LISTAR
+    function cargar() {
+        fetch("usuarioService.php?accion=listar")
+            .then(r => r.json())
+            .then(data => {
+                let tabla = document.getElementById("tablaUsuarios");
+
+                tabla.innerHTML = `
+        <tr>
+            <th>Correo</th>
+            <th>Tipo</th>
+            <th>Acción</th>
+        </tr>`;
+
+                data.forEach(u => {
+
+                    // ❌ ocultar admins
+                    if (u.tipoUsuario === "administrador") return;
+
+                    tabla.innerHTML += `
+            <tr>
+                <td>${u.correo}</td>
+                <td>${u.tipoUsuario}</td>
+                <td>
+                    <button type="button" onclick="eliminar('${u.correo}')">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>`;
+                });
+            });
+    }
+
+    cargar();
+</script>
+
+</html>

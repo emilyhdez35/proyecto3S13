@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planilla</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/facturas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+
+<header id="header">
+    <img src="img/LogoSample_ByTailorBrands.jpg" alt="logo" id="logo">
+
+    <nav class="menu">
+        <a href="inicio.html">Inicio</a>
+        <a href="flujoDeCaja.html">Flujo de Caja</a>
+        <a href="login.html">Iniciar Sesión</a>
+        <a href="generarCodigos.php">Generar códigos</a>
+        <a href="facturaXcobrar.php">Facturas por Cobrar</a>
+        <a href="facturaXpagar.php">Facturas por pagar</a>
+        <a href="empleados.html">Empleados</a>
+        <a href="planilla.html">Planilla</a>
+
+    </nav>
+
+    <div class="ubicacion">
+        <i class="fa-solid fa-location-dot"></i>
+        <p>Costa Rica</p>
+
+    </div>
+
+</header>
+
+<body>
+
+    <h1>Gestión de Planilla</h1>
+
+    <!-- SALARIO -->
+    <form id="formSalario">
+
+        <h2>Registrar salario</h2>
+
+        <label>ID Empleado</label>
+        <input type="number" name="empleado" required>
+
+        <label>Salario base</label>
+        <input type="number" name="salario" required>
+
+        <button type="submit">Guardar salario</button>
+
+    </form>
+
+    <!-- PAGO -->
+    <form id="formPago">
+
+        <h2>Registrar pago</h2>
+
+        <label>ID Empleado</label>
+        <input type="number" name="empleado" required>
+
+        <label>Fecha</label>
+        <input type="date" name="fecha" required>
+
+        <label>Monto</label>
+        <input type="number" name="monto" required>
+
+        <label>Descripción</label>
+        <input type="text" name="descripcion">
+
+        <button type="submit">Registrar pago</button>
+
+    </form>
+
+    <!-- TABLA -->
+    <h2>Consulta de planilla</h2>
+
+    <table id="tablaPlanilla">
+        <tr>
+            <th>Nombre</th>
+            <th>Puesto</th>
+            <th>Salario</th>
+            <th>Fecha Pago</th>
+            <th>Monto</th>
+        </tr>
+    </table>
+
+    <script>
+        // SALARIO
+        formSalario.onsubmit = e => {
+            e.preventDefault();
+
+            fetch("services/planillaService.php?accion=guardarSalario", {
+                method: "POST",
+                body: new FormData(formSalario)
+            })
+                .then(() => cargar());
+        };
+
+        // PAGO
+        formPago.onsubmit = e => {
+            e.preventDefault();
+
+            fetch("services/planillaService.php?accion=guardarPago", {
+                method: "POST",
+                body: new FormData(formPago)
+            })
+                .then(() => cargar());
+        };
+
+        // LISTAR
+        function cargar() {
+            fetch("services/planillaService.php?accion=listar")
+                .then(r => r.json())
+                .then(data => {
+                    let tabla = document.getElementById("tablaPlanilla");
+
+                    tabla.innerHTML = `
+        <tr>
+            <th>Nombre</th>
+            <th>Puesto</th>
+            <th>Salario</th>
+            <th>Fecha Pago</th>
+            <th>Monto</th>
+        </tr>`;
+
+                    data.forEach(d => {
+                        tabla.innerHTML += `
+            <tr>
+                <td>${d.nombre}</td>
+                <td>${d.puesto}</td>
+                <td>₡${d.salarioBase || ""}</td>
+                <td>${d.fecha || ""}</td>
+                <td>₡${d.monto || ""}</td>
+            </tr>`;
+                    });
+                });
+        }
+
+        cargar();
+    </script>
+
+</body>
+
+</html>

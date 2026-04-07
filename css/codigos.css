@@ -1,0 +1,139 @@
+/* RESET */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    background: #f4f6f9;
+}
+
+/* TITULOS */
+h1 {
+    text-align: center;
+    margin-top: 30px;
+    color: #333;
+}
+
+h2 {
+    margin-top: 40px;
+    color: #444;
+}
+
+/* BOTONES PRINCIPALES */
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+/* Botones superiores */
+button[onclick*="cliente"] {
+    background: #4CAF50;
+    color: white;
+}
+
+button[onclick*="proveedor"] {
+    background: #2196F3;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+/* CONTENEDOR GENERAL */
+body > h1,
+body > button {
+    display: block;
+    text-align: center;
+    margin: 10px auto;
+}
+
+/* TABLAS */
+table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+th {
+    background: #2c3e50;
+    color: white;
+    padding: 10px;
+}
+
+td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background: #f1f1f1;
+}
+
+/* MODAL FONDO */
+#modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+
+    overflow-y: auto; /* 🔥 permite scroll en toda la pantalla */
+}
+
+/*CONTENIDO MODAL*/
+#modal > div {
+    background: white;
+    padding: 25px;
+    width: 400px;
+    margin: 5% auto;
+    border-radius: 10px;
+
+    max-height: 80vh; /* 🔥 limita altura */
+    overflow-y: auto; /* 🔥 scroll interno */
+}
+
+/* INPUTS */
+input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* LABELS */
+label {
+    font-weight: bold;
+    color: #333;
+}
+
+/* BOTONES FORM */
+form button {
+    width: 100%;
+    background: #27ae60;
+    color: white;
+    margin-top: 10px;
+}
+
+/* BOTON CERRAR */
+#modal button:last-child {
+    background: #e74c3c;
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* TEXTO AYUDA */
+p {
+    font-size: 12px;
+    color: #777;
+    margin: 5px 0 10px 0;
+}

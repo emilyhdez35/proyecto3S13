@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <style>
+        /* CARDS */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin: 20px;
+        }
+
+        .card-producto {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+
+        .card-producto:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-producto img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .card-producto h3 {
+            margin: 10px 0 5px;
+        }
+
+        .precio {
+            color: #2c7be5;
+            font-weight: bold;
+        }
+
+        .desc {
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* SELECCIÓN TABLA */
+        #cuerpoTabla tr {
+            cursor: pointer;
+        }
+
+        #cuerpoTabla tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        #cuerpoTabla tr.seleccionado {
+            background-color: #cce5ff !important;
+        }
+    </style>
+
+</head>
+
+<header id="header">
+    <img src="img/LogoSample_ByTailorBrands.jpg" alt="logo" id="logo">
+
+    <nav class="menu">
+        <a href="inicio.html">Inicio</a>
+        <a href="flujoDeCaja.html">Flujo de Caja</a>
+        <a href="generarCodigos.php">Generar códigos</a>
+        <a href="facturaXcobrar.php">Facturas por Cobrar</a>
+        <a href="facturaXpagar.php">Facturas por Pagar</a>
+        <a href="empleados.html">Empleados</a>
+        <a href="planilla.html">Planilla</a>
+
+
+        <button onclick="logout()">Cerrar sesión</button>
+    </nav>
+    <script>
+        function logout() {
+            window.location.href = "usuarioService.php?accion=logout";
+        }
+    </script>
+
+
+    <div class="ubicacion">
+        <i class="fa-solid fa-location-dot"></i>
+        <p>Costa Rica</p>
+
+    </div>
+
+</header>
+
+
+<body>
+    <section id="tablaProductos">
+        <h2>Productos disponibles</h2>
+        <div id="cardsBody" class="cards-container"></div>
+    </section>
+
+    <section>
+        <div class="GestionInventario">
+            <h2>Gestión de inventario bienvet</h2>
+
+
+
+            <div style="display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+            justify-items: center; 
+            max-width: 500px; 
+            margin: 0 auto;">
+
+
+                <input type="text" id="codigo" placeholder="Código del producto"
+                    style="padding: 5px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; width: 80%;">
+                <input type="number" id="precio" placeholder="Precio"
+                    style="padding: 5px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; width: 80%;">
+
+
+                <input type="text" id="nombre" placeholder="Nombre del producto"
+                    style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; width: 80%;">
+                <input type="number" id="cantidad" placeholder="Cantidad en stock"
+                    style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; width: 80%;">
+
+
+                <input type="text" id="descripcion" placeholder="Descripción"
+                    style="padding: 5px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; width: 80%;">
+                <input type="text" id="imagen" placeholder="URL Imagen"
+                    style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; width: 80%;">
+
+
+                <input type="text" id="distribuidor" placeholder="Distribuidor"
+                    style="padding: 5px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; width: 80%;">
+                <input type="date" id="fecha"
+                    style="padding: 5px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; width: 80%;">
+            </div>
+
+
+            <div style="padding: 15px;">
+                <button onclick="agregarProducto()">Agregar</button>
+                <button onclick="limpiarCampos()">Limpiar</button>
+            </div>
+
+        </div>
+
+
+        <h3>Filtros</h3>
+        <input id="filtroNombre" placeholder="Nombre del producto"
+            style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; width: 15%;">
+        <input id="filtroCodigo" placeholder="Código del producto"
+            style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; width: 15%;">
+        <input id="filtroFecha" type="date"
+            style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; width: 15%;">
+
+        <div style="padding: 15px;">
+            <button onclick="filtrar()">Filtrar</button>
+            <button onclick="cargarProductos()">Todos</button>
+        </div>
+
+
+        </div>
+
+        <table class="tabla-inventario">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Fecha de Registro</th>
+                    <th>Distribuidor</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla"></tbody>
+        </table>
+
+        <br>
+
+        <button onclick="editarSeleccionado()">Editar</button>
+        <button onclick="eliminarSeleccionado()">Eliminar</button>
+        </div>
+
+        <script>
+
+            let listaProductos = [];
+            let tipoUsuario = "";
+            let productoSeleccionado = null;
+
+            // sesión
+            fetch("session.php")
+                .then(r => r.json())
+                .then(d => tipoUsuario = d.tipo);
+
+            // ===== CARGAR =====
+            function cargarProductos() {
+                fetch("productoService.php?accion=listar")
+                    .then(r => r.json())
+                    .then(data => {
+                        renderProductos(data); // tabla
+                        renderCards(data);     // 🔥 cards
+                    });
+            }
+
+            // ===== CARDS =====
+            function renderCards(data) {
+                let contenedor = document.getElementById("cardsBody");
+                contenedor.innerHTML = "";
+
+                data.forEach(p => {
+                    contenedor.innerHTML += `
+        <div class="card-producto">
+            <img src="${p.imagen || 'img/default.jpg'}">
+            <h3>${p.nombre}</h3>
+            <p class="precio">₡${p.precio}</p>
+            <p class="desc">${p.descripcion || ""}</p>
+            <small>${p.distribuidor || ""}</small>
+        </div>`;
+                });
+            }
+
+            // ===== AGREGAR =====
+            function agregarProducto() {
+
+                const data = new URLSearchParams();
+
+                data.append("accion", "agregar");
+                data.append("codigo", codigo.value.trim());
+                data.append("nombre", nombre.value.trim());
+                data.append("precio", precio.value.trim());
+                data.append("cantidad", cantidad.value.trim());
+                data.append("descripcion", descripcion.value.trim());
+                data.append("imagen", imagen.value.trim());
+                data.append("distribuidor", distribuidor.value.trim());
+                data.append("fecha", fecha.value);
+
+                if (!data.get("codigo") || !data.get("nombre") || !data.get("precio") || !data.get("cantidad")) {
+                    alert("Por favor completa los campos obligatorios.");
+                    return;
+                }
+
+                if (isNaN(data.get("precio")) || isNaN(data.get("cantidad"))) {
+                    alert("Precio y cantidad deben ser números.");
+                    return;
+                }
+
+                fetch("productoService.php", {
+                    method: "POST",
+                    body: data
+                })
+                    .then(r => r.text())
+                    .then(res => {
+                        if (res === "ok") {
+                            alert("Producto agregado correctamente");
+                            limpiarCampos();
+                            cargarProductos();
+                        } else {
+                            alert("Error: " + res);
+                        }
+                    })
+                    .catch(() => alert("Error de conexión"));
+            }
+
+            // ===== FILTRAR =====
+            function filtrar() {
+                let nombreF = filtroNombre.value;
+                let codigoF = filtroCodigo.value;
+                let fechaF = filtroFecha.value;
+
+                fetch(`productoService.php?accion=filtrar&nombre=${nombreF}&codigo=${codigoF}&fecha=${fechaF}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        renderProductos(data);
+                        renderCards(data); // 🔥 también filtra cards
+                    });
+            }
+
+            // ===== LIMPIAR =====
+            function limpiarCampos() {
+
+                nombre.value = "";
+                precio.value = "";
+                cantidad.value = "";
+                descripcion.value = "";
+                imagen.value = "";
+                distribuidor.value = "";
+                codigo.value = "";
+                fecha.value = "";
+
+                productoSeleccionado = null;
+
+                document.querySelectorAll("#cuerpoTabla tr")
+                    .forEach(tr => tr.classList.remove("seleccionado"));
+            }
+
+            // ===== TABLA =====
+            function renderProductos(data) {
+
+                listaProductos = data;
+
+                let tabla = document.getElementById("cuerpoTabla");
+                tabla.innerHTML = "";
+
+                data.forEach(p => {
+                    tabla.innerHTML += `
+        <tr onclick="seleccionarFila(this, ${p.id})">
+            <td>${p.codigo || "-"}</td>
+            <td>${p.nombre}</td>
+            <td>${p.cantidad}</td>
+            <td>${p.fechaRegistro || "-"}</td>
+            <td>${p.distribuidor || "-"}</td>
+        </tr>`;
+                });
+            }
+
+            // ===== SELECCIÓN =====
+            function seleccionarFila(fila, id) {
+
+                document.querySelectorAll("#cuerpoTabla tr")
+                    .forEach(tr => tr.classList.remove("seleccionado"));
+
+                fila.classList.add("seleccionado");
+                productoSeleccionado = id;
+
+                let producto = listaProductos.find(p => p.id == id);
+
+                if (producto) {
+                    nombre.value = producto.nombre;
+                    precio.value = producto.precio;
+                    cantidad.value = producto.cantidad;
+                    descripcion.value = producto.descripcion || "";
+                    imagen.value = producto.imagen || "";
+                    distribuidor.value = producto.distribuidor || "";
+                    codigo.value = producto.codigo || "";
+                }
+            }
+
+            // ===== EDITAR =====
+            function editarSeleccionado() {
+
+                if (!productoSeleccionado) {
+                    alert("Seleccione un producto primero");
+                    return;
+                }
+
+                if (!confirm("¿Guardar cambios?")) return;
+
+                let data = new URLSearchParams();
+                data.append("accion", "editar");
+                data.append("id", productoSeleccionado);
+                data.append("nombre", nombre.value);
+                data.append("precio", precio.value);
+                data.append("cantidad", cantidad.value);
+                data.append("descripcion", descripcion.value);
+                data.append("imagen", imagen.value);
+                data.append("distribuidor", distribuidor.value);
+                data.append("codigo", codigo.value);
+
+                fetch("productoService.php", {
+                    method: "POST",
+                    body: data
+                }).then(() => {
+                    cargarProductos();
+                    productoSeleccionado = null;
+                });
+            }
+
+            // ===== ELIMINAR =====
+            function eliminarSeleccionado() {
+
+                if (!productoSeleccionado) {
+                    alert("Seleccione un producto primero");
+                    return;
+                }
+
+                if (tipoUsuario !== "administrador") {
+                    alert("Solo admin puede eliminar");
+                    return;
+                }
+
+                if (!confirm("¿Eliminar producto?")) return;
+
+                fetch("productoService.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `accion=eliminar&id=${productoSeleccionado}`
+                })
+                    .then(r => r.text())
+                    .then(res => {
+                        if (res === "ok") {
+                            cargarProductos();
+                            productoSeleccionado = null;
+                        }
+                    });
+            }
+
+            // INIT
+            window.onload = cargarProductos;
+
+        </script>
+
+
+    </section>
+
+
+    <section id="Locaciones">
+        <h2>Disponible en:</h2>
+        <ul>
+            <li>Santo Tomás</li>
+            <li>Fundación Narime</li>
+        </ul>
+    </section>
+
+    <section id="VideoPromocional">
+        <video autoplay muted loop id="video">
+            <source src="img/video promocional.mp4" type="video/mp4">
+            Tu navegador no soporta la reproducción de videos.
+        </video>
+    </section>
+
+    <section id="SobreNosotros">
+        <h2>Sobre Nosotros:</h2>
+        <p>
+            En BienVet, somos una veterinaria dedicada al cuidado integral de las mascotas, comprometida con su
+            bienestar, salud y calidad de vida. Brindamos atención médica responsable, preventiva y especializada,
+            respaldada por un equipo profesional que trabaja con vocación, ética y amor por los animales. Nuestro
+            propósito es acompañar a cada familia en el cuidado de sus mascotas, ofreciendo un servicio confiable,
+            humano y de alta calidad en un ambiente seguro y cercano.
+        </p>
+    </section>
+
+
+
+
+</body>
+
+<footer class="footer">
+    <div class="redes">
+        <strong>“Porque tu mascota es parte de tu familia.”</strong>
+        <br>
+        <br>
+        <a href="#" class="red facebook" target="_blank">
+            <i class="fa-brands fa-facebook-f"></i>
+            <span>Fundación Narime</span>
+        </a>
+
+        <a href="#" class="red instagram" target="_blank">
+            <i class="fa-brands fa-instagram"></i>
+            <span>Fundación Narime</span>
+        </a>
+    </div>
+</footer>
+
+</html>
